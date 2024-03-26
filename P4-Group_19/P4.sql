@@ -1,172 +1,124 @@
--- Table `Hotel`
-CREATE TABLE Hotel (
-    Hotel_ID INT AUTO_INCREMENT PRIMARY KEY,
-    Hotel_Name VARCHAR(255) NOT NULL,
-    Hotel_Address VARCHAR(255) NOT NULL,
-    Hotel_Phone_no VARCHAR(50) NOT NULL
+-- Employee Table
+CREATE TABLE Employee (
+    Employee_ID INT PRIMARY KEY,
+    Name VARCHAR(255),
+    Email VARCHAR(255),
+    Phone VARCHAR(255),
+    Designation VARCHAR(255),
+    Address TEXT,
+    Hiring_Date DATE
 );
 
--- Table `Events`
-CREATE TABLE Events (
-    EventID INT AUTO_INCREMENT PRIMARY KEY,
-    EventName VARCHAR(255) NOT NULL,
-    EventDescription TEXT,
-    EventStartDate DATE NOT NULL,
-    Hotel_ID INT,
-    FOREIGN KEY (Hotel_ID) REFERENCES Hotel(Hotel_ID)
-);
-
--- Table `Customer`
+-- Customer Table
 CREATE TABLE Customer (
-    Customer_ID INT AUTO_INCREMENT PRIMARY KEY,
-    Customer_Name VARCHAR(255) NOT NULL,
-    Customer_Phone VARCHAR(50),
-    Ssn VARCHAR(50),
+    Customer_ID INT PRIMARY KEY,
+    Customer_Name VARCHAR(255),
+    Customer_Phone VARCHAR(255),
+    Ssn VARCHAR(255),
     Customer_Email VARCHAR(255),
-    Hotel_ID INT,
-    FOREIGN KEY (Hotel_ID) REFERENCES Hotel(Hotel_ID)
+    Hotel_ID INT
 );
 
--- Table `Amenities`
-CREATE TABLE Amenities (
-    Amenity_ID INT AUTO_INCREMENT PRIMARY KEY,
-    Amenity_Name VARCHAR(255) NOT NULL,
-    Amenity_Location VARCHAR(255)
-);
-
--- Table `Amenity_Usage`
-CREATE TABLE Amenity_Usage (
-    Customer_ID INT,
-    Amenity_ID INT,
-    PRIMARY KEY (Customer_ID, Amenity_ID),
-    FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID),
-    FOREIGN KEY (Amenity_ID) REFERENCES Amenities(Amenity_ID)
-);
-
--- Table `Room`
-CREATE TABLE Room (
-    RoomID INT AUTO_INCREMENT PRIMARY KEY,
-    Room_no VARCHAR(50) NOT NULL,
-    Room_Type VARCHAR(50) NOT NULL,
-    FOREIGN KEY (Hotel_ID) REFERENCES Hotel(Hotel_ID)
-);
-
--- Table `Reservation`
+-- Reservation Table
 CREATE TABLE Reservation (
-    ReservationID INT AUTO_INCREMENT PRIMARY KEY,
-    Check_In DATE NOT NULL,
-    Check_Out DATE NOT NULL,
-    Duration INT NOT NULL,
-    Reservation_date DATE NOT NULL,
+    ReservationID INT PRIMARY KEY,
+    Check_In DATE,
+    Check_Out DATE,
+    Duration INT,
+    Reservation_date DATE,
     Customer_ID INT,
     Room_ID INT,
     Transaction_ID INT,
     FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID),
     FOREIGN KEY (Room_ID) REFERENCES Room(RoomID),
-    FOREIGN KEY (Transaction_ID) REFERENCES Finance(Transaction_ID)
+    FOREIGN KEY (Transaction_ID) REFERENCES Transaction(Transaction_ID)
 );
 
--- Table `Finance`
-CREATE TABLE Finance (
-    Transaction_ID INT AUTO_INCREMENT PRIMARY KEY,
-    Transaction_Type VARCHAR(50) NOT NULL,
-    Transaction_date DATE NOT NULL,
-    Amount DECIMAL(10, 2) NOT NULL
+-- Transaction Table
+CREATE TABLE Transaction (
+    Transaction_ID INT PRIMARY KEY,
+    Transaction_Type VARCHAR(255),
+    Transaction_date DATE,
+    Amount DECIMAL(10, 2)
 );
 
--- Table `Employee`
-CREATE TABLE Employee (
-    Employee_ID INT AUTO_INCREMENT PRIMARY KEY,
-    Name VARCHAR(255) NOT NULL,
-    Email VARCHAR(255) NOT NULL,
-    Phone VARCHAR(50) NOT NULL,
-    Designation VARCHAR(255) NOT NULL,
-    Address VARCHAR(255) NOT NULL,
-    Hiring_Date DATE NOT NULL
+-- Room Table
+CREATE TABLE Room (
+    RoomID INT PRIMARY KEY,
+    Room_no VARCHAR(255),
+    Room_Type VARCHAR(255)
 );
 
--- Table `Room_Service`
+-- Room Service Table
 CREATE TABLE Room_Service (
-    RS_ID INT AUTO_INCREMENT PRIMARY KEY,
+    RS_ID INT PRIMARY KEY,
     Employee_ID INT,
-    Food_Item VARCHAR(255) NOT NULL,
     Customer_ID INT,
     Room_ID INT,
+    Service_Type VARCHAR(255),
     FOREIGN KEY (Employee_ID) REFERENCES Employee(Employee_ID),
     FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID),
     FOREIGN KEY (Room_ID) REFERENCES Room(RoomID)
 );
 
--- Table `Restaurant`
-CREATE TABLE Restaurant (
-    Order_Id INT AUTO_INCREMENT PRIMARY KEY,
-    Table_ID INT,
-    Seating_Capacity INT,
-    Server_ID INT,
-    FOREIGN KEY (Server_ID) REFERENCES Employee(Employee_ID)
+-- InHouse Guest Table
+CREATE TABLE InHouse_Guest (
+    Guest_ID INT PRIMARY KEY,
+    Customer_ID INT,
+    Room_ID INT,
+    Hotel_Phone_no VARCHAR(255),
+    FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID),
+    FOREIGN KEY (Room_ID) REFERENCES Room(RoomID)
 );
 
--- Table `Parking`
+-- Restaurant Guest Table
+CREATE TABLE Restaurant_Guest (
+    Guest_ID INT PRIMARY KEY,
+    Order_ID INT,
+    Customer_ID INT,
+    FOREIGN KEY (Order_ID) REFERENCES Order(Order_ID),
+    FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID)
+);
+
+-- Order Table
+CREATE TABLE Order (
+    Order_ID INT PRIMARY KEY,
+    Table_ID INT,
+    Seating_Capacity INT,
+    Server_ID INT
+);
+
+-- Restaurant Table
+CREATE TABLE Restaurant (
+    Order_ID INT PRIMARY KEY,
+    Restaurant_Name VARCHAR(255),
+    Table_Number INT,
+    Amount DECIMAL(10, 2),
+    Customer_Name VARCHAR(255),
+    Transaction_id INT,
+    Server_name VARCHAR(255),
+    FOREIGN KEY (Transaction_id) REFERENCES Transaction(Transaction_ID)
+);
+
+-- Table Table
+CREATE TABLE TableEntity (
+    Table_ID INT PRIMARY KEY,
+    Table_Number VARCHAR(255),
+    Seating_Capacity INT
+);
+
+-- Parking Table
 CREATE TABLE Parking (
-    Parking_ID INT AUTO_INCREMENT PRIMARY KEY,
-    Phone_Number VARCHAR(50) NOT NULL,
-    Parking_Spot_number VARCHAR(50) NOT NULL,
+    Parking_ID INT PRIMARY KEY,
+    Phone_Number VARCHAR(255),
+    Parking_Spot_number VARCHAR(255),
     Customer_ID INT,
     Employee_ID INT,
     FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID),
     FOREIGN KEY (Employee_ID) REFERENCES Employee(Employee_ID)
 );
 
--- Table `Working_Schedule`
-CREATE TABLE Working_Schedule (
-    AmenityID INT,
-    EmployeeID INT,
-    Shift_Time VARCHAR(50) NOT NULL,
-    PRIMARY KEY (AmenityID, EmployeeID),
-    FOREIGN KEY (AmenityID) REFERENCES Amenities(Amenity_ID),
-    FOREIGN KEY (EmployeeID) REFERENCES Employee(Employee_ID)
-);
-
--- Additional tables based on your ERD
-
--- Table `Table`
-CREATE TABLE Table (
-    Table_ID INT AUTO_INCREMENT PRIMARY KEY,
-    Table_Number INT NOT NULL,
-    Seating_Capacity INT NOT NULL
-);
-
--- Table `Restaurant_Reservation`
-CREATE TABLE Restaurant_Reservation (
-    Room_Reservation_ID INT AUTO_INCREMENT PRIMARY KEY,
-    Reservation_ID INT,
-    Table_ID INT,
-    FOREIGN KEY (Reservation_ID) REFERENCES Reservation(ReservationID),
-    FOREIGN KEY (Table_ID) REFERENCES Table(Table_ID)
-);
-
--- Table `Room_Reservation`
-CREATE TABLE Room_Reservation (
-    Room_Reservation_ID INT AUTO_INCREMENT PRIMARY KEY,
-    Reservation_ID INT,
-    Room_ID INT,
-    FOREIGN KEY (Reservation_ID) REFERENCES Reservation(ReservationID),
-    FOREIGN KEY (Room_ID) REFERENCES Room(RoomID)
-);
-
--- Table `Guest`
-CREATE TABLE Guest (
-    Guest_ID INT AUTO_INCREMENT PRIMARY KEY,
-    Customer_ID INT,
-    FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID)
-);
-
--- Table `Order`
-CREATE TABLE `Order` (
-    Order_ID INT AUTO_INCREMENT PRIMARY KEY,
-    Table_ID INT,
-    Seating_Capacity INT,
-    Server_ID INT,
-    FOREIGN KEY (Table_ID) REFERENCES Table(Table_ID),
-    FOREIGN KEY (Server_ID) REFERENCES Employee(Employee_ID)
-);
+-- Adding Reservation Made By Relationship
+ALTER TABLE Reservation
+ADD CONSTRAINT FK_Reservation_Employee
+FOREIGN KEY (Employee_ID) REFERENCES Employee(Employee_ID);
