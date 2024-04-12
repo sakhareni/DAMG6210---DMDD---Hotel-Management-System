@@ -38,44 +38,38 @@ SELECT @RoomNumber AS RoomNumber, @CustomerName AS CustomerName;
 
 
 CREATE PROCEDURE GetCustomerInfo
-@Customer_ID INT,
-@Customer_Name VARCHAR(255) OUTPUT,
-@Customer_Phone VARCHAR(20) OUTPUT,
-@SSN VARCHAR(20) OUTPUT,
-@Customer_Email VARCHAR(255) OUTPUT
+    @Customer_ID INT,
+    @Customer_Name VARCHAR(255) OUTPUT,
+    @Customer_Phone VARCHAR(20) OUTPUT,
+    @Customer_Email VARCHAR(255) OUTPUT
 AS
 BEGIN
-   SELECT
-       @Customer_Name = Customer_Name,
-       @Customer_Phone = Customer_Phone,
-       @SSN = SSN,
-       @Customer_Email = Customer_Email
-   FROM Customer
-   WHERE Customer_ID = @Customer_ID;
+    SELECT
+        @Customer_Name = Customer_Name,
+        @Customer_Phone = Customer_Phone,
+        @Customer_Email = Customer_Email
+    FROM Customer
+    WHERE Customer_ID = @Customer_ID;
 END;
+GO
 
+-- Declare variables to hold the output data
+DECLARE @Name VARCHAR(255);
+DECLARE @Phone VARCHAR(20);
+DECLARE @Email VARCHAR(255);
 
-DECLARE @Customer_Name VARCHAR(255),
-       @Customer_Phone VARCHAR(20),
-       @SSN VARCHAR(20),
-       @Customer_Email VARCHAR(255);
-
-
+-- Execute the stored procedure
 EXEC GetCustomerInfo
-   @Customer_ID = 1, -- for example
-   @Customer_Name = @Customer_Name OUTPUT,
-   @Customer_Phone = @Customer_Phone OUTPUT,
-   @SSN = @SSN OUTPUT,
-   @Customer_Email = @Customer_Email OUTPUT;
+    @Customer_ID = 1, -- Assume you want to get details for customer ID 1
+    @Customer_Name = @Name OUTPUT,
+    @Customer_Phone = @Phone OUTPUT,
+    @Customer_Email = @Email OUTPUT;
 
-
-SELECT @Customer_Name AS 'Name',
-      @Customer_Phone AS 'Phone',
-      @SSN AS 'SSN',
-      @Customer_Email AS 'Email';
-
-
-
+-- Select the output variables to view the results
+SELECT
+    @Name AS CustomerName,
+    @Phone AS CustomerPhone,
+    @Email AS CustomerEmail;
 
 -- 3rd Procedure
 
@@ -191,7 +185,7 @@ VALUES
 
 -- Q4  at least 3 Table-level CHECK Constraints
 
-i) Constraints to check  if employee designation is ‘Valet’ in the parking table
+i) Constraints to check  if employee designation is â€˜Valetâ€™ in the parking table
 GO
 CREATE TRIGGER ValidateEmployeeRoleOnParking
 ON Parking
@@ -244,7 +238,7 @@ ADD CONSTRAINT CHK_Employee_Hiring_Date CHECK (Hiring_Date <= CAST(GETDATE() AS 
 
 INSERT INTO Employee (Name, Email, Phone, Designation, [Address], Hiring_Date)
 VALUES ('John Doe', 'johndoe@example.com', '555-1234', 'Manager', '1234 Main St', '2025-04-01');
-iv)  Transaction type is of a particular type ‘Payment’ and ‘Refund’ 
+iv)  Transaction type is of a particular type â€˜Paymentâ€™ and â€˜Refundâ€™ 
 ALTER TABLE [Transaction]
 ADD CONSTRAINT CHK_Transaction_Type CHECK (Transaction_Type IN ('Payment', 'Refund'));
 INSERT INTO [Transaction] (Transaction_ID, Transaction_Type, Transaction_date, Amount)
